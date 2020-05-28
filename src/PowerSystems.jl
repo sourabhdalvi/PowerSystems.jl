@@ -317,6 +317,7 @@ include("models/supplemental_accessors.jl")
 
 # Definitions of PowerSystem
 include("base.jl")
+include("system_partitioner.jl")
 
 #Data Checks
 include("utils/IO/system_checks.jl")
