@@ -2,6 +2,7 @@ using Test
 using Logging
 using Dates
 import InteractiveUtils
+import JSON
 
 import InfrastructureSystems
 import InfrastructureSystems: Deterministic, Probabilistic, ScenarioBased, Forecast

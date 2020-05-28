@@ -77,7 +77,7 @@ function get_connected_spanned_bus(sys::System, bus::Bus)
 end
 
 """
-Return a branch if the bus is connected a bus in a different partition zone.
+Return a branch if the bus is connected to a bus in a different partition zone.
 Otherwise, return nothing.
 """
 function get_spanned_branch(sys::System, bus::Bus) 
