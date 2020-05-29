@@ -127,6 +127,14 @@ function get_components(::Type{Bus}, sys::System, partition::Int)
     return get_components(Bus, sys, x -> partition in Set(get_partition_zones(sys, x)))
 end
 
+"""
+Return branches in partition. A branch that spans partitions is considered part of both
+partitions.
+"""
+function get_components(::Type{T}, sys::System, partition::Int) where {T <: Branch}
+    return get_components(T, sys, x -> partition in Set(get_partition_zones(x)))
+end
+
 function _get_ext_field(component::Component, field)
     ext = get_ext(component)
     return get(ext, field, nothing)

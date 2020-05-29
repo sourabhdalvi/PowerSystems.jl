@@ -51,6 +51,12 @@ function test_spanned_branches(sys::System)
     end
 end
 
+function test_branch_get_components(sys, filename::AbstractString)
+    for partition in keys(PSY.read_partition_mapping(filename))
+        @test !isempty(collect(get_components(Branch, sys, partition)))
+    end
+end
+
 function test_devices_by_partition_zone(sys)
     partition_zone_to_device = Dict{Int, Vector{StaticInjection}}()
     for device in get_components(StaticInjection, sys)
@@ -85,4 +91,5 @@ end
     test_bus_partition_zones(sys, partition_file)
     test_spanned_branches(sys)
     test_devices_by_partition_zone(sys)
+    test_branch_get_components(sys, partition_file)
 end
