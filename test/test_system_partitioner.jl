@@ -22,16 +22,6 @@ function create_partitions(sys::System)
     return path
 end
 
-@testset "Test system partitioning" begin
-    sys = create_rts_system()
-    partition_file = create_partitions(sys)
-    PSY.partition_system!(sys, partition_file)
-
-    test_bus_partition_zones(sys, partition_file)
-    test_spanned_branches(sys)
-    test_devices_by_partition_zone(sys)
-end
-
 function test_bus_partition_zones(sys::System, filename::AbstractString)
     for (partition, bus_numbers) in read_partition_mapping(filename)
         total = Set([get_number(x) for x in get_components(Bus, sys, partition)])
@@ -54,9 +44,9 @@ function test_spanned_branches(sys::System)
 
         # Test get_partition_zones.
         partitions = sort!([from_partition_zone, to_partition_zone])
-        partitions2 = sort!(get_partition_zones(sys, bus))
+        partitions2 = sort!(PSY.get_partition_zones(sys, bus))
         @test partitions == partitions2
-        partitions3 = sort!(get_partition_zones(branch))
+        partitions3 = sort!(PSY.get_partition_zones(branch))
         @test partitions == partitions3
     end
 end
@@ -64,7 +54,7 @@ end
 function test_devices_by_partition_zone(sys)
     partition_zone_to_device = Dict{Int, Vector{StaticInjection}}()
     for device in get_components(StaticInjection, sys)
-        partition_zone = get_partition_zone(device)
+        partition_zone = PSY.get_partition_zone(device)
         if !haskey(partition_zone_to_device, partition_zone)
             partition_zone_to_device[partition_zone] = Vector{StaticInjection}()
         end
@@ -85,4 +75,14 @@ function test_devices_by_partition_zone(sys)
             println("  $(summary(device))")
         end
     end
+end
+
+@testset "Test system partitioning" begin
+    sys = create_rts_system()
+    partition_file = create_partitions(sys)
+    PSY.partition_system!(sys, partition_file)
+
+    test_bus_partition_zones(sys, partition_file)
+    test_spanned_branches(sys)
+    test_devices_by_partition_zone(sys)
 end
