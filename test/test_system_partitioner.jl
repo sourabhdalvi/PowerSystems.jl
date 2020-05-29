@@ -23,7 +23,7 @@ function create_partitions(sys::System)
 end
 
 function test_bus_partition_zones(sys::System, filename::AbstractString)
-    for (partition, bus_numbers) in read_partition_mapping(filename)
+    for (partition, bus_numbers) in PSY.read_partition_mapping(filename)
         total = Set([get_number(x) for x in get_components(Bus, sys, partition)])
         # total includes attached buses in other partitions.
         @test length(total) > length(bus_numbers)
