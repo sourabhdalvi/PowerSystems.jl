@@ -35,9 +35,9 @@ end
 
 function test_spanned_branches(sys::System)
     for bus in get_components(Bus, sys)
-        spanned_bus = get_connected_spanned_bus(sys, bus)
+        spanned_bus = PSY.get_connected_spanned_bus(sys, bus)
         isnothing(spanned_bus) && continue
-        branch = get_spanned_branch(sys, bus)
+        branch = PSY.get_spanned_branch(sys, bus)
         from_partition_zone, to_partition_zone = _from_to_partition_zones(branch)
         println("Buses $(get_name(bus)) and $(get_name(spanned_bus)) span partitions " *
                 "$from_partition_zone and $to_partition_zone via $(get_name(branch))")
