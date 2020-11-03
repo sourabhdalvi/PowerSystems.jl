@@ -44,21 +44,21 @@ generator = ThermalStandard(
    time_at_status: 1.0e6
    dynamic_injector: nothing
    ext: Dict{String,Any}()
-   time_series_container: InfrastructureSystems.TimeSeriesContainer: 0</pre><h3 id="Step-2:-Creating-the-TimeSeriesData"><a class="docs-heading-anchor" href="#Step-2:-Creating-the-TimeSeriesData">Step 2: Creating the TimeSeriesData</a><a id="Step-2:-Creating-the-TimeSeriesData-1"></a><a class="docs-heading-anchor-permalink" href="#Step-2:-Creating-the-TimeSeriesData" title="Permalink"></a></h3><p>The user is expected to pass the TimeSeriesData that holds the energy bid data which can be of any type (i.e. <code>SingleTimeSeries</code> or <code>Deterministic</code>) and data can be <code>Array{Float64}</code>, <code>Array{Tuple{Float64, Float64}}</code> or <code>Array{Array{Tuple{Float64,Float64}}</code>. If the data is just floats then the cost in the optimization is seen as a constant variable cost, but if data is a Tuple or <code>Array{Tuple}</code> then the model expects the tuples to be cost &amp; power-point pairs (cost in /p.u-hr &amp; power-point in p.u-hr), which is modeled same as TwoPartCost or ThreePartCost. Code below shows an example of how to build a TimeSeriesData.</p><pre><code class="language-julia">using PowerSystems
+   time_series_container: InfrastructureSystems.TimeSeriesContainer: 0</pre><h3 id="Step-2:-Creating-the-TimeSeriesData"><a class="docs-heading-anchor" href="#Step-2:-Creating-the-TimeSeriesData">Step 2: Creating the TimeSeriesData</a><a id="Step-2:-Creating-the-TimeSeriesData-1"></a><a class="docs-heading-anchor-permalink" href="#Step-2:-Creating-the-TimeSeriesData" title="Permalink"></a></h3><p>The user is expected to pass the TimeSeriesData that holds the energy bid data which can be of any type (i.e. <code>SingleTimeSeries</code> or <code>Deterministic</code>) and data can be <code>Array{Float64}</code>, <code>Array{Tuple{Float64, Float64}}</code> or <code>Array{Array{Tuple{Float64,Float64}}</code>. If the data is just floats then the cost in the optimization is seen as a constant variable cost, but if data is a Tuple or <code>Array{Tuple}</code> then the model expects the tuples to be cost &amp; power-point pairs (cost in /p.u-hr &amp; power-point in p.u-hr), which is modeled same as TwoPartCost or ThreePartCost. Code below shows an example of how to build a TimeSeriesData.</p><pre><code class="language-julia">using PowerSystems, Dates
 data =
-    Dict(PowerSystems.Dates.DateTime(&quot;2020-01-01&quot;) =&gt; [
+    Dict(Dates.DateTime(&quot;2020-01-01&quot;) =&gt; [
         [(0.0, 0.05), (290.1, 0.0733), (582.72, 0.0967), (894.1, 0.120)],
         [(0.0, 0.05), (300.1, 0.0733), (600.72, 0.0967), (900.1, 0.120)],]
     )
 time_series_data = Deterministic(
     name = &quot;variable_cost&quot;,
     data = data,
-    resolution = PowerSystems.Dates.Hour(1)
+    resolution = Dates.Hour(1)
 )</code></pre><pre class="documenter-example-output">Deterministic time_series (length(time_series)):
    name: variable_cost
    data: DataStructures.SortedDict(Dates.DateTime(&quot;2020-01-01T00:00:00&quot;) =&gt; [[(0.0, 0.05), (290.1, 0.0733), (582.72, 0.0967), (894.1, 0.12)], [(0.0, 0.05), (300.1, 0.0733), (600.72, 0.0967), (900.1, 0.12)]])
    resolution: 1 hour
-   scaling_factor_multiplier: nothing</pre><h3 id="Step-3a:-Adding-Energy-Bid-TimeSeriesData-to-the-device"><a class="docs-heading-anchor" href="#Step-3a:-Adding-Energy-Bid-TimeSeriesData-to-the-device">Step 3a: Adding Energy Bid TimeSeriesData to the device</a><a id="Step-3a:-Adding-Energy-Bid-TimeSeriesData-to-the-device-1"></a><a class="docs-heading-anchor-permalink" href="#Step-3a:-Adding-Energy-Bid-TimeSeriesData-to-the-device" title="Permalink"></a></h3><p>To add energy market bids time-series to the MarketBidCost, the use of <code>set_variable_cost!</code> is recommended.</p><pre><code class="language-julia">using PowerSystems
+   scaling_factor_multiplier: nothing</pre><h3 id="Step-3a:-Adding-Energy-Bid-TimeSeriesData-to-the-device"><a class="docs-heading-anchor" href="#Step-3a:-Adding-Energy-Bid-TimeSeriesData-to-the-device">Step 3a: Adding Energy Bid TimeSeriesData to the device</a><a id="Step-3a:-Adding-Energy-Bid-TimeSeriesData-to-the-device-1"></a><a class="docs-heading-anchor-permalink" href="#Step-3a:-Adding-Energy-Bid-TimeSeriesData-to-the-device" title="Permalink"></a></h3><p>To add energy market bids time-series to the MarketBidCost, the use of <code>set_variable_cost!</code> is recommended.</p><pre><code class="language-julia">using PowerSystems, Dates
 
 bus = Bus(1, &quot;nodeE&quot;, &quot;PV&quot;, 0, 1.0, (min = 0.9, max = 1.05), 230, nothing, nothing)
 generator = ThermalStandard(
@@ -86,19 +86,19 @@ generator = ThermalStandard(
 )
 sys = System(100.0, [bus], [generator])
 data =
-    Dict(PowerSystems.Dates.DateTime(&quot;2020-01-01&quot;) =&gt; [
+    Dict(Dates.DateTime(&quot;2020-01-01&quot;) =&gt; [
         [(0.0, 0.05), (290.1, 0.0733), (582.72, 0.0967), (894.1, 0.120)],
         [(0.0, 0.05), (300.1, 0.0733), (600.72, 0.0967), (900.1, 0.120)],]
     )
 time_series_data = Deterministic(
     name = &quot;variable_cost&quot;,
     data = data,
-    resolution = PowerSystems.Dates.Hour(1)
+    resolution = Dates.Hour(1)
 )
 set_variable_cost!(sys, generator, time_series_data)</code></pre><pre class="documenter-example-output">┌ Error: Model doesn&#39;t contain a slack bus
 └ @ PowerSystems ~/work/PowerSystems.jl/PowerSystems.jl/src/utils/IO/system_checks.jl:25
 ┌ Warning: There are no ElectricLoad Components in the System
-└ @ PowerSystems ~/work/PowerSystems.jl/PowerSystems.jl/src/utils/IO/system_checks.jl:56</pre><h4 id="Arguments-for-set_variable_cost!"><a class="docs-heading-anchor" href="#Arguments-for-set_variable_cost!">Arguments for <code>set_variable_cost!</code></a><a id="Arguments-for-set_variable_cost!-1"></a><a class="docs-heading-anchor-permalink" href="#Arguments-for-set_variable_cost!" title="Permalink"></a></h4><ul><li><code>sys::System</code>: PowerSystem System</li><li><code>component::StaticInjection</code>: Static injection device</li><li><code>time_series_data::TimeSeriesData</code>: TimeSeriesData</li></ul><h3 id="Step-3b:-Adding-Service-Bid-TimeSeriesData-to-the-device"><a class="docs-heading-anchor" href="#Step-3b:-Adding-Service-Bid-TimeSeriesData-to-the-device">Step 3b: Adding Service Bid TimeSeriesData to the device</a><a id="Step-3b:-Adding-Service-Bid-TimeSeriesData-to-the-device-1"></a><a class="docs-heading-anchor-permalink" href="#Step-3b:-Adding-Service-Bid-TimeSeriesData-to-the-device" title="Permalink"></a></h3><p>Similar to adding energy market bids,  for adding bids for ancillary services the use of <code>set_service_bid!</code> is recommended.</p><pre><code class="language-julia">using PowerSystems
+└ @ PowerSystems ~/work/PowerSystems.jl/PowerSystems.jl/src/utils/IO/system_checks.jl:56</pre><h4 id="Arguments-for-set_variable_cost!"><a class="docs-heading-anchor" href="#Arguments-for-set_variable_cost!">Arguments for <code>set_variable_cost!</code></a><a id="Arguments-for-set_variable_cost!-1"></a><a class="docs-heading-anchor-permalink" href="#Arguments-for-set_variable_cost!" title="Permalink"></a></h4><ul><li><code>sys::System</code>: PowerSystem System</li><li><code>component::StaticInjection</code>: Static injection device</li><li><code>time_series_data::TimeSeriesData</code>: TimeSeriesData</li></ul><h3 id="Step-3b:-Adding-Service-Bid-TimeSeriesData-to-the-device"><a class="docs-heading-anchor" href="#Step-3b:-Adding-Service-Bid-TimeSeriesData-to-the-device">Step 3b: Adding Service Bid TimeSeriesData to the device</a><a id="Step-3b:-Adding-Service-Bid-TimeSeriesData-to-the-device-1"></a><a class="docs-heading-anchor-permalink" href="#Step-3b:-Adding-Service-Bid-TimeSeriesData-to-the-device" title="Permalink"></a></h3><p>Similar to adding energy market bids,  for adding bids for ancillary services the use of <code>set_service_bid!</code> is recommended.</p><pre><code class="language-julia">using PowerSystems, Dates
 
 bus = Bus(1, &quot;nodeE&quot;, &quot;PV&quot;, 0, 1.0, (min = 0.9, max = 1.05), 230, nothing, nothing)
 service = VariableReserve{ReserveUp}(&quot;test_reserve&quot;, true, 0.6, 2.0)
@@ -129,13 +129,13 @@ generator = ThermalStandard(
 sys = System(100.0, [bus], [generator])
 add_service!(sys, service, get_components(ThermalStandard, sys))
 data =
-    Dict(PowerSystems.Dates.DateTime(&quot;2020-01-01&quot;) =&gt; [650.3, 750.0])
+    Dict(Dates.DateTime(&quot;2020-01-01&quot;) =&gt; [650.3, 750.0])
 time_series_data = Deterministic(
     name = get_name(service),
     data = data,
-    resolution = PowerSystems.Dates.Hour(1)
+    resolution = Dates.Hour(1)
 )
 set_service_bid!(sys, generator, service, time_series_data)</code></pre><pre class="documenter-example-output">┌ Error: Model doesn&#39;t contain a slack bus
 └ @ PowerSystems ~/work/PowerSystems.jl/PowerSystems.jl/src/utils/IO/system_checks.jl:25
 ┌ Warning: There are no ElectricLoad Components in the System
-└ @ PowerSystems ~/work/PowerSystems.jl/PowerSystems.jl/src/utils/IO/system_checks.jl:56</pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../system_dynamic_data/">« Creating a System with Dynamic devices</a><a class="docs-footer-nextpage" href="../parsing/">Constructing a System from RAW data »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Tuesday 3 November 2020 21:04">Tuesday 3 November 2020</span>. Using Julia version 1.5.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+└ @ PowerSystems ~/work/PowerSystems.jl/PowerSystems.jl/src/utils/IO/system_checks.jl:56</pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../system_dynamic_data/">« Creating a System with Dynamic devices</a><a class="docs-footer-nextpage" href="../parsing/">Constructing a System from RAW data »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Tuesday 3 November 2020 23:46">Tuesday 3 November 2020</span>. Using Julia version 1.5.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
