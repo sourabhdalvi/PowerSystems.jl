@@ -63,7 +63,7 @@ ybus_entry = ybus[bus3, bus3]</code></pre><pre class="documenter-example-output"
  0.0  -0.00281516   -0.0108034    -0.0177046    …   0.145234     -0.035575
  0.0  -0.000413472  -0.00158673   -0.00260034      -0.169694     -0.0887458
  0.0  -0.00144634   -0.00555046   -0.00909609      -0.593595     -0.310436
- 0.0   1.07132e-17  -1.34601e-17   4.84298e-17      4.25457e-18   0.0
+ 0.0   1.07132e-17   1.87782e-17  -3.03541e-17      4.25457e-18   0.0
  0.0   0.0029521     0.0113289     0.0185658       -0.241187     -0.356933
  0.0   0.00281516    0.0108034     0.0177046    …  -0.145234      0.035575
  0.0   0.00185981    0.00713719    0.0116964       -0.236711     -0.600818
@@ -108,23 +108,23 @@ ptdf_entry = ptdf[line, bus]</code></pre><pre class="documenter-example-output">
   12 =&gt; 12
   1  =&gt; 1</pre><h2 id="LODF"><a class="docs-heading-anchor" href="#LODF">LODF</a><a id="LODF-1"></a><a class="docs-heading-anchor-permalink" href="#LODF" title="Permalink"></a></h2><p>LODF and PTDF share the same characteristics in terms of indexing and calculation:</p><pre><code class="language-julia">lodf = LODF(system_data)</code></pre><pre class="documenter-example-output">PowerNetworkMatrix
 :
- -1.0           1.0          -0.207667     …   0.00397419    0.030043
-  1.0          -1.0           0.207667        -0.00397419   -0.030043
- -0.168846      0.168846     -1.0              0.00337054    0.0254797
- -0.353359      0.353359      0.455286         0.00705382    0.0533236
- -0.477795      0.477795      0.337047        -0.00645017   -0.0487603
- -0.168846      0.168846     -1.0          …   0.00337054    0.0254797
- -0.493344      0.493344     -0.514609        -0.0561692    -0.424613
- -0.0182249     0.0182249    -0.0190105        0.0420518     0.317892
- -0.0106362     0.0106362    -0.0110947        0.0245418     0.185525
-  0.0288612    -0.0288612     0.0301052       -0.0665936    -0.503416
-  0.0173795    -0.0173795     0.0181287    …   0.0656897     0.496584
-  0.00255259   -0.00255259    0.00266262      -1.0          -0.222319
-  0.00892907   -0.00892907    0.00931395       0.867717     -0.777681
- -6.61382e-17   9.64509e-18   5.48592e-17      1.28408e-16   1.1685e-17
- -0.0182249     0.0182249    -0.0190105        0.0420518     0.317892
- -0.0173795     0.0173795    -0.0181287    …  -0.0656897    -0.496584
- -0.0114817     0.0114817    -0.0119766        0.132283      1.0
- -0.0173795     0.0173795    -0.0181287       -0.0656897    -0.496584
-  0.00255259   -0.00255259    0.00266262      -1.0          -0.222319
-  0.0114817    -0.0114817     0.0119766       -0.132283     -1.0</pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../generated_modeling_with_JuMP/">« Modeling With Jump</a><a class="docs-footer-nextpage" href="../generated_power_flow/">Power Flow »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Friday 18 December 2020 05:32">Friday 18 December 2020</span>. Using Julia version 1.4.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+ -1.0           1.0          -0.207667    …   0.00397419    0.030043
+  1.0          -1.0           0.207667       -0.00397419   -0.030043
+ -0.168846      0.168846     -1.0             0.00337054    0.0254797
+ -0.353359      0.353359      0.455286        0.00705382    0.0533236
+ -0.477795      0.477795      0.337047       -0.00645017   -0.0487603
+ -0.168846      0.168846     -1.0         …   0.00337054    0.0254797
+ -0.493344      0.493344     -0.514609       -0.0561692    -0.424613
+ -0.0182249     0.0182249    -0.0190105       0.0420518     0.317892
+ -0.0106362     0.0106362    -0.0110947       0.0245418     0.185525
+  0.0288612    -0.0288612     0.0301052      -0.0665936    -0.503416
+  0.0173795    -0.0173795     0.0181287   …   0.0656897     0.496584
+  0.00255259   -0.00255259    0.00266262     -1.0          -0.222319
+  0.00892907   -0.00892907    0.00931395      0.867717     -0.777681
+ -6.61382e-17  -4.31541e-17  -1.8303e-17      1.28408e-16   1.1685e-17
+ -0.0182249     0.0182249    -0.0190105       0.0420518     0.317892
+ -0.0173795     0.0173795    -0.0181287   …  -0.0656897    -0.496584
+ -0.0114817     0.0114817    -0.0119766       0.132283      1.0
+ -0.0173795     0.0173795    -0.0181287      -0.0656897    -0.496584
+  0.00255259   -0.00255259    0.00266262     -1.0          -0.222319
+  0.0114817    -0.0114817     0.0119766      -0.132283     -1.0</pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../generated_modeling_with_JuMP/">« Modeling With Jump</a><a class="docs-footer-nextpage" href="../generated_power_flow/">Power Flow »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Friday 18 December 2020 06:03">Friday 18 December 2020</span>. Using Julia version 1.4.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
