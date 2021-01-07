@@ -22,17 +22,18 @@ generator = ThermalStandard(
             shut_down = 0.0,
         ),
         base_power = 100.0,
-    )</code></pre><pre class="documenter-example-output">Brighton (ThermalStandard):
+    )</code></pre><pre class="documenter-example-output">
+Brighton (ThermalStandard):
    name: Brighton
    available: true
    status: true
    bus: nodeE (Bus)
-   active_power: 6.0
-   reactive_power: 1.5
-   rating: 0.75
-   active_power_limits: (min = 0.0, max = 6.0)
-   reactive_power_limits: (min = -4.5, max = 4.5)
-   ramp_limits: (up = 5.0, down = 3.0)
+   active_power: 600.0
+   reactive_power: 150.0
+   rating: 75.0
+   active_power_limits: (min = 0.0, max = 600.0)
+   reactive_power_limits: (min = -450.0, max = 450.0)
+   ramp_limits: (up = 500.0, down = 300.0)
    operation_cost: MarketBidCost
    base_power: 100.0
    time_limits: (up = 0.015, down = 0.015)
@@ -42,7 +43,8 @@ generator = ThermalStandard(
    time_at_status: 1.0e6
    dynamic_injector: nothing
    ext: Dict{String,Any}()
-   time_series_container: InfrastructureSystems.TimeSeriesContainer: 0</pre><h3 id="Step-2:-Creating-the-TimeSeriesData-for-the-Market-Bid"><a class="docs-heading-anchor" href="#Step-2:-Creating-the-TimeSeriesData-for-the-Market-Bid">Step 2: Creating the <code>TimeSeriesData</code> for the Market Bid</a><a id="Step-2:-Creating-the-TimeSeriesData-for-the-Market-Bid-1"></a><a class="docs-heading-anchor-permalink" href="#Step-2:-Creating-the-TimeSeriesData-for-the-Market-Bid" title="Permalink"></a></h3><p>The user is expected to pass the <code>TimeSeriesData</code> that holds the energy bid data which can be of any type (i.e. <code>SingleTimeSeries</code> or <code>Deterministic</code>) and data can be <code>Array{Float64}</code>, <code>Array{Tuple{Float64, Float64}}</code> or <code>Array{Array{Tuple{Float64,Float64}}</code>. If the data is just floats then the cost in the optimization is seen as a constant variable cost, but if data is a Tuple or <code>Array{Tuple}</code> then the model expects the tuples to be cost &amp; power-point pairs (cost in /p.u-hr &amp; power-point in p.u-hr), which is modeled same as TwoPartCost or ThreePartCost. Code below shows an example of how to build a TimeSeriesData.</p><pre><code class="language-julia">data =
+   time_series_container: InfrastructureSystems.TimeSeriesContainer: 0
+   internal: InfrastructureSystems.InfrastructureSystemsInternal</pre><h3 id="Step-2:-Creating-the-TimeSeriesData-for-the-Market-Bid"><a class="docs-heading-anchor" href="#Step-2:-Creating-the-TimeSeriesData-for-the-Market-Bid">Step 2: Creating the <code>TimeSeriesData</code> for the Market Bid</a><a id="Step-2:-Creating-the-TimeSeriesData-for-the-Market-Bid-1"></a><a class="docs-heading-anchor-permalink" href="#Step-2:-Creating-the-TimeSeriesData-for-the-Market-Bid" title="Permalink"></a></h3><p>The user is expected to pass the <code>TimeSeriesData</code> that holds the energy bid data which can be of any type (i.e. <code>SingleTimeSeries</code> or <code>Deterministic</code>) and data can be <code>Array{Float64}</code>, <code>Array{Tuple{Float64, Float64}}</code> or <code>Array{Array{Tuple{Float64,Float64}}</code>. If the data is just floats then the cost in the optimization is seen as a constant variable cost, but if data is a Tuple or <code>Array{Tuple}</code> then the model expects the tuples to be cost &amp; power-point pairs (cost in /p.u-hr &amp; power-point in p.u-hr), which is modeled same as TwoPartCost or ThreePartCost. Code below shows an example of how to build a TimeSeriesData.</p><pre><code class="language-julia">data =
     Dict(Dates.DateTime(&quot;2020-01-01&quot;) =&gt; [
         [(0.0, 0.05), (290.1, 0.0733), (582.72, 0.0967), (894.1, 0.120)],
         [(0.0, 0.05), (300.1, 0.0733), (600.72, 0.0967), (900.1, 0.120)],]
@@ -70,4 +72,4 @@ time_series_data = Deterministic(
     data = data,
     resolution = Dates.Hour(1)
 )
-set_service_bid!(sys, generator, service, time_series_data)</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../system_dynamic_data/">« Creating a System with Dynamic devices</a><a class="docs-footer-nextpage" href="../generated_modeling_with_JuMP/">Modeling With Jump »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Tuesday 5 January 2021 01:41">Tuesday 5 January 2021</span>. Using Julia version 1.4.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+set_service_bid!(sys, generator, service, time_series_data)</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../system_dynamic_data/">« Creating a System with Dynamic devices</a><a class="docs-footer-nextpage" href="../generated_modeling_with_JuMP/">Modeling With Jump »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Thursday 7 January 2021 00:21">Thursday 7 January 2021</span>. Using Julia version 1.4.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
