@@ -37,6 +37,62 @@ mutable struct HybridSystem <: StaticInjection
     time_series_container::InfrastructureSystems.TimeSeriesContainer
     "power system internal reference, do not modify"
     internal::InfrastructureSystemsInternal
+
+    function HybridSystem(
+        name,
+        available,
+        status,
+        bus,
+        active_power,
+        reactive_power,
+        base_power,
+        operation_cost,
+        thermal_unit,
+        electric_load,
+        storage,
+        renewable_unit,
+        interconnection_impedance,
+        interconnection_rating,
+        input_active_power_limits,
+        output_active_power_limits,
+        reactive_power_limits,
+        services,
+        dynamic_injector,
+        ext,
+        time_series_container,
+        internal,
+    )
+        components = [thermal_unit, electric_load, storage, renewable_unit]
+        components = filter!(x -> !isnothing(x), components)
+        for comp in components
+            push!(comp.ext, "is_hybrid_subcomponent" => true)
+        end
+        sys = new(
+            name,
+            available,
+            status,
+            bus,
+            active_power,
+            reactive_power,
+            base_power,
+            operation_cost,
+            thermal_unit,
+            electric_load,
+            storage,
+            renewable_unit,
+            interconnection_impedance,
+            interconnection_rating,
+            input_active_power_limits,
+            output_active_power_limits,
+            reactive_power_limits,
+            services,
+            dynamic_injector,
+            ext,
+            time_series_container,
+            internal,
+        )
+        return sys
+    end
 end
 
 function HybridSystem(;
