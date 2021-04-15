@@ -800,6 +800,12 @@
             "default_value": null
         },
         {
+            "unit": "MJ/MW",
+            "name": "inertia",
+            "description": "Inertia MJ/MW",
+            "default_value": null
+        },
+        {
             "name": "generator_category",
             "value_options": [
                 "HydroDispatch",
