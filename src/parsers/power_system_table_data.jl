@@ -1224,7 +1224,7 @@ function make_renewable_generator(
     var_cost, fixed, fuel_cost =
         calculate_variable_cost(data, gen, cost_colnames, base_power)
     operation_cost = TwoPartCost(var_cost, fixed)
-
+    ext = Dict{String, Any}("inertia" => gen.inertia)
     if gen_type == RenewableDispatch
         @debug("Creating $(gen.name) as RenewableDispatch")
         generator = RenewableDispatch(
@@ -1239,6 +1239,7 @@ function make_renewable_generator(
             power_factor = gen.power_factor,
             operation_cost = operation_cost,
             base_power = base_power,
+            ext = ext,
         )
     elseif gen_type == RenewableFix
         @debug("Creating $(gen.name) as RenewableFix")
@@ -1275,6 +1276,7 @@ function make_storage(data::PowerSystemTableData, gen, storage, bus)
     )
     efficiency = (in = storage.input_efficiency, out = storage.output_efficiency)
     (reactive_power, reactive_power_limits) = make_reactive_params(storage)
+    ext = Dict{String, Any}("inertia" => gen.inertia)
     battery = GenericBattery(;
         name = gen.name,
         available = storage.available,
@@ -1290,6 +1292,7 @@ function make_storage(data::PowerSystemTableData, gen, storage, bus)
         reactive_power = reactive_power,
         reactive_power_limits = reactive_power_limits,
         base_power = storage.base_power,
+        ext = ext,
     )
 
     return battery
