@@ -3546,6 +3546,92 @@
       "supertype": "AVR"
     },
     {
+      "struct_name": "SEXS",
+      "docstring": "Parameters of Simplified Excitation System Model - SEXS in PSSE",
+      "fields": [
+        {
+          "name": "Ta_Tb",
+          "comment": "Ratio of lead and lag time constants",
+          "null_value": 0,
+          "data_type": "Float64",
+          "valid_range": {
+            "min": 0,
+            "max": null
+          }
+        },
+        {
+          "name": "Tb",
+          "comment": "Lag time constant",
+          "null_value": 0,
+          "data_type": "Float64",
+          "valid_range": {
+            "min": "eps()",
+            "max": null
+          }
+        },
+        {
+          "name": "K",
+          "comment": "Gain",
+          "null_value": 0,
+          "data_type": "Float64",
+          "valid_range": {
+            "min": 0,
+            "max": null
+          }
+        },
+        {
+          "name": "Te",
+          "comment": "Field circuit time constant in s",
+          "null_value": 0,
+          "data_type": "Float64",
+          "valid_range": {
+            "min": 0,
+            "max": null
+          }
+        },
+        {
+          "name": "V_lim",
+          "comment": "Field voltage limits",
+          "null_value": "(min=0.0, max=0.0)",
+          "data_type": "NamedTuple{(:min, :max), Tuple{Float64, Float64}}"
+        },
+        {
+          "name": "ext",
+          "data_type": "Dict{String, Any}",
+          "null_value": "Dict{String, Any}()",
+          "default": "Dict{String, Any}()"
+        },
+        {
+          "name": "states",
+          "exclude_setter": true,
+          "comment": "The states are:\tVf: Voltage field,\tVr: Lead-lag state",
+          "internal_default": "[:Vf, :Vr]",
+          "data_type": "Vector{Symbol}"
+        },
+        {
+          "name": "n_states",
+          "exclude_setter": true,
+          "comment": "SEXS has 2 states",
+          "internal_default": 2,
+          "data_type": "Int"
+        },
+        {
+          "name": "states_types",
+          "comment": "SEXS has 2 differential states",
+          "internal_default": "[StateTypes.Differential, StateTypes.Differential]",
+          "data_type": "Vector{StateTypes}"
+        },
+        {
+          "name": "internal",
+          "comment": "power system internal reference, do not modify",
+          "data_type": "InfrastructureSystemsInternal",
+          "internal_default": "InfrastructureSystemsInternal()",
+          "exclude_setter": true
+        }
+      ],
+      "supertype": "AVR"
+    },
+    {
       "struct_name": "ESDC1A",
       "docstring": "Self-excited shunt fields with the voltage regulator operating in a mode commonly termed buck-boost. \nParameters of IEEE Std 421.5 Type DC1A Excitacion System. This model corresponds to ESDC1A in PSSE and PSLF",
       "fields": [
@@ -10060,6 +10146,40 @@
       "supertype": "FrequencyEstimator"
     },
     {
+      "struct_name": "FixedFrequency",
+      "docstring": "Parameters of a Fixed Frequency Estimator (i.e. no PLL).",
+      "fields": [
+        {
+          "name": "frequency",
+          "comment": "Reference used",
+          "null_value": 0,
+          "data_type": "Float64",
+          "default": "1.0"
+        },
+        {
+          "name": "ext",
+          "data_type": "Dict{String, Any}",
+          "null_value": "Dict{String, Any}()",
+          "default": "Dict{String, Any}()"
+        },
+        {
+          "name": "states",
+          "exclude_setter": true,
+          "comment": "FixedFrequency has no states",
+          "internal_default": "Vector{Symbol}()",
+          "data_type": "Vector{Symbol}"
+        },
+        {
+          "name": "n_states",
+          "exclude_setter": true,
+          "comment": "FixedFrequency has no states",
+          "internal_default": 0,
+          "data_type": "Int"
+        }
+      ],
+      "supertype": "FrequencyEstimator"
+    },
+    {
       "struct_name": "VirtualInertia",
       "docstring": "Parameters of a Virtual Inertia with SRF using VSM for active power controller",
       "fields": [
@@ -10121,6 +10241,64 @@
           "name": "n_states",
           "exclude_setter": true,
           "comment": "VirtualInertia has two states",
+          "internal_default": 2,
+          "data_type": "Int"
+        }
+      ],
+      "supertype": "ActivePowerControl"
+    },
+    {
+      "struct_name": "ActivePowerDroop",
+      "docstring": "Parameters of an Active Power droop controller",
+      "fields": [
+        {
+          "name": "Rp",
+          "comment": "Droop Gain",
+          "null_value": 0,
+          "data_type": "Float64",
+          "valid_range": {
+            "min": 0,
+            "max": null
+          }
+        },
+        {
+          "name": "ωz",
+          "comment": "filter frequency cutoff",
+          "null_value": 0,
+          "data_type": "Float64",
+          "valid_range": {
+            "min": 0,
+            "max": null
+          }
+        },
+        {
+          "name": "P_ref",
+          "comment": "Reference Power Set-point",
+          "null_value": 0,
+          "default": "1.0",
+          "data_type": "Float64",
+          "valid_range": {
+            "min": 0,
+            "max": null
+          }
+        },
+        {
+          "name": "ext",
+          "data_type": "Dict{String, Any}",
+          "null_value": "Dict{String, Any}()",
+          "default": "Dict{String, Any}()"
+        },
+        {
+          "name": "states",
+          "exclude_setter": true,
+          "comment": "The states of the ActivePowerDroop model are:\n\tθ_oc: Phase angle displacement of the inverter model,\n\tp_oc: Measured active power of the inverter model",
+          "internal_default": "[:θ_oc, :p_oc]",
+          "data_type": "Vector{Symbol}"
+        },
+        {
+          "name": "n_states",
+          "exclude_setter": true,
+          "comment": "ActivePowerDroop has two states",
           "internal_default": 2,
           "data_type": "Int"
         }

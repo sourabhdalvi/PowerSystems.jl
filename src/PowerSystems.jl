@@ -23,6 +23,7 @@ export get_max_active_power
 export get_max_reactive_power
 export Branch
 export StaticInjection
+export StaticInjectionSubsystem
 export ACBranch
 export Line
 export MonitoredLine
@@ -94,6 +95,7 @@ export EXPIC1
 export ESST1A
 export ESST4B
 export SCRX
+export SEXS
 
 #Machine Exports
 export Machine
@@ -151,11 +153,13 @@ export LCFilter
 # FrequencyEstimator Exports
 export FrequencyEstimator
 export KauraPLL
+export FixedFrequency
 
 # Outer Control Exports
 export OuterControl
 export VirtualInertia
 export ReactivePowerDroop
+export ActivePowerDroop
 
 # InnerControl Export
 export InnerControl
@@ -209,6 +213,7 @@ export get_dynamic_components
 export solve_powerflow!
 export solve_powerflow
 export validate_connectivity
+export find_connected_components
 
 export parse_file
 export add_time_series!
@@ -216,6 +221,7 @@ export remove_time_series!
 export clear_time_series!
 export copy_time_series!
 export add_component!
+export add_components!
 export remove_component!
 export remove_components!
 export clear_components!
@@ -235,6 +241,7 @@ export ServiceContributingDevicesKey
 export ServiceContributingDevicesMapping
 export get_component
 export get_components
+export get_subcomponents
 export get_components_by_name
 export get_available_components
 export get_forecast_horizon
@@ -267,6 +274,9 @@ export transform_single_time_series!
 export sanitize_component!
 export validate_component
 export validate_component_with_system
+export get_compression_settings
+export CompressionSettings
+export CompressionTypes
 
 #export make_time_series
 export get_bus_numbers
@@ -322,6 +332,7 @@ export check_components
 
 export configure_logging
 export open_file_logger
+export make_logging_config_file
 export MultiLogger
 export LogEventTracker
 export UnitSystem
@@ -391,11 +402,14 @@ import InfrastructureSystems:
     serialize,
     deserialize,
     get_time_series_multiple,
+    CompressionSettings,
+    CompressionTypes,
     NormalizationFactor,
     NormalizationTypes,
     UnitSystem,
     SystemUnitsSettings,
     open_file_logger,
+    make_logging_config_file,
     validate_struct,
     MultiLogger,
     LogEventTracker
@@ -425,14 +439,15 @@ abstract type Component <: IS.InfrastructureSystemsComponent end
 """ Supertype for "devices" (bus, line, etc.) """
 abstract type Device <: Component end
 
+# Include utilities
+include("utils/logging.jl")
+include("utils/IO/base_checks.jl")
+
 include("definitions.jl")
 include("models/static_models.jl")
 include("models/dynamic_models.jl")
 include("models/injection.jl")
-
-# Include utilities
-include("utils/logging.jl")
-include("utils/IO/base_checks.jl")
+include("models/static_injection_subsystem.jl")
 
 # PowerSystems models
 include("models/topological_elements.jl")

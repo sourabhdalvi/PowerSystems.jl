@@ -20,6 +20,8 @@ const SYSTEM_KWARGS = Set((
     :unit_system,
     :pm_data_corrections,
     :import_all,
+    :enable_compression,
+    :compression,
 ))
 
 # This will be used in the future to handle serialization changes.
@@ -50,6 +52,8 @@ System(; kwargs...)
 - `runchecks::Bool`: Run available checks on input fields and when add_component! is called.
   Throws InvalidRange if an error is found.
 - `time_series_in_memory::Bool=false`: Store time series data in memory instead of HDF5.
+- `enable_compression::Bool=false`: Enable compression of time series data in HDF5.
+- `compression::CompressionSettings`: Allows customization of HDF5 compression settings.
 - `config_path::String`: specify path to validation config file
 """
 struct System <: IS.InfrastructureSystemsType
@@ -383,7 +387,7 @@ function add_component!(
     IS.add_component!(
         sys.data,
         component;
-        deserialization_in_progress = deserialization_in_progress,
+        allow_existing_time_series = deserialization_in_progress,
         skip_validation = skip_validation,
         _kwargs...,
     )
@@ -400,6 +404,27 @@ function add_component!(
     end
 
     return
+end
+
+"""
+Add many components to the system at once.
+
+Throws ArgumentError if the component's name is already stored for its concrete type.
+Throws ArgumentError if any Component-specific rule is violated.
+Throws InvalidRange if any of the component's field values are outside of defined valid
+range.
+
+# Examples
+```julia
+sys = System(100.0)
+
+buses = [bus1, bus2, bus3]
+generators = [gen1, gen2, gen3]
+foreach(x -> add_component!(sys, x), Iterators.flatten((buses, generators)))
+```
+"""
+function add_components!(sys::System, components)
+    foreach(x -> add_component!(sys, x), components)
 end
 
 """
@@ -641,10 +666,33 @@ Remove all components of type T from the system.
 
 Throws ArgumentError if the type is not stored.
 """
+# the argument order in this function is un-julian and should be deprecated in 2.0
 function remove_components!(::Type{T}, sys::System) where {T <: Component}
-    for component in IS.remove_components!(T, sys.data)
+    components = IS.remove_components!(T, sys.data)
+    for component in components
         handle_component_removal!(sys, component)
     end
+    return components
+end
+
+function remove_components!(sys::System, ::Type{T}) where {T <: Component}
+    components = IS.remove_components!(T, sys.data)
+    for component in components
+        handle_component_removal!(sys, component)
+    end
+    return components
+end
+
+function remove_components!(
+    filter_func::Function,
+    sys::System,
+    ::Type{T},
+) where {T <: Component}
+    components = collect(get_components(T, sys, filter_func))
+    for component in components
+        remove_component!(sys, component)
+    end
+    return components
 end
 
 function clear_units!(component::Component)
@@ -1011,6 +1059,11 @@ end
 =#
 
 """
+Return the compression settings used for system data such as time series arrays.
+"""
+get_compression_settings(sys::System) = IS.get_compression_settings(sys.data)
+
+"""
 Return the initial times for all forecasts.
 """
 get_forecast_initial_times(sys::System) = IS.get_forecast_initial_times(sys.data)
@@ -1234,7 +1287,7 @@ function IS.deserialize(
 
     ext = get_ext(sys)
     ext["deserialization_in_progress"] = true
-    deserialize_components!(sys, raw["data"]["components"])
+    deserialize_components!(sys, raw["data"])
     pop!(ext, "deserialization_in_progress")
     isempty(ext) && clear_ext!(sys)
 
@@ -1252,7 +1305,9 @@ end
 function deserialize_components!(sys::System, raw)
     # Convert the array of components into type-specific arrays to allow addition by type.
     data = Dict{Any, Vector{Dict}}()
-    for component in raw
+    # This field was not present in older versions.
+    masked_components = get(raw, "masked_components", [])
+    for component in Iterators.Flatten((raw["components"], masked_components))
         type = IS.get_type_from_serialization_data(component)
         components = get(data, type, nothing)
         if components === nothing
@@ -1310,7 +1365,17 @@ function deserialize_components!(sys::System, raw)
     deserialize_and_add!(; include_types = [DynamicBranch])
     # Static injection devices can contain dynamic injection devices.
     deserialize_and_add!(; include_types = [StaticReserveGroup, DynamicInjection])
+    # StaticInjectionSubsystem instances have StaticInjection subcomponents.
+    deserialize_and_add!(; skip_types = [StaticInjectionSubsystem])
     deserialize_and_add!()
+
+    for subsystem in get_components(StaticInjectionSubsystem, sys)
+        # This normally happens when the subsytem is added to the system.
+        # Workaround for deserialization.
+        for subcomponent in get_subcomponents(subsystem)
+            IS.mask_component!(sys.data, subcomponent)
+        end
+    end
 end
 
 """
@@ -1508,6 +1573,20 @@ function handle_component_addition!(sys::System, dyn_injector::DynamicInjection;
     set_dynamic_injector!(static_injector, dyn_injector)
 end
 
+function handle_component_addition!(
+    sys::System,
+    subsystem::StaticInjectionSubsystem;
+    kwargs...,
+)
+    for subcomponent in get_subcomponents(subsystem)
+        if is_attached(subcomponent, sys)
+            IS.mask_component!(sys.data, subcomponent)
+        else
+            IS.add_masked_component!(sys.data, subcomponent)
+        end
+    end
+end
+
 function handle_component_addition_common!(sys::System, component::Branch)
     # If this arc is already attached to the system, assign it to the branch.
     # Else, add it to the system.
@@ -1576,17 +1655,19 @@ function IS.compare_values(x::System, y::System)
     match = true
 
     if x.units_settings.unit_system != x.units_settings.unit_system
-        @debug "unit system does not match" x.units_settings.unit_system y.units_settings.unit_system
+        @debug "unit system does not match" _group = IS.LOG_GROUP_SERIALIZATION x.units_settings.unit_system y.units_settings.unit_system
         match = false
     end
 
     if get_base_power(x) != get_base_power(y)
-        @debug "base_power does not match" get_base_power(x) get_base_power(y)
+        @debug "base_power does not match" _group = IS.LOG_GROUP_SERIALIZATION get_base_power(
+            x,
+        ) get_base_power(y)
         match = false
     end
 
     if !IS.compare_values(x.data, y.data)
-        @debug "SystemData values do not match"
+        @debug "SystemData values do not match" _group = IS.LOG_GROUP_SERIALIZATION
         match = false
     end
 
@@ -1605,13 +1686,13 @@ function IS.compare_values(x::T, y::T) where {T <: Union{StaticInjection, Dynami
             uuid1 = IS.get_uuid(val1)
             uuid2 = IS.get_uuid(val2)
             if uuid1 != uuid2
-                @debug "values do not match" T fieldname uuid1 uuid2
+                @debug "values do not match" _group = IS.LOG_GROUP_SERIALIZATION T fieldname uuid1 uuid2
                 match = false
                 break
             end
         elseif !isempty(fieldnames(typeof(val1)))
             if !IS.compare_values(val1, val2)
-                @debug "values do not match" T fieldname val1 val2
+                @debug "values do not match" _group = IS.LOG_GROUP_SERIALIZATION T fieldname val1 val2
                 match = false
                 break
             end
@@ -1621,7 +1702,7 @@ function IS.compare_values(x::T, y::T) where {T <: Union{StaticInjection, Dynami
             end
         else
             if val1 != val2
-                @debug "values do not match" T fieldname val1 val2
+                @debug "values do not match" _group = IS.LOG_GROUP_SERIALIZATION T fieldname val1 val2
                 match = false
                 break
             end
@@ -1635,6 +1716,11 @@ function _create_system_data_from_kwargs(; kwargs...)
     validation_descriptor_file = nothing
     time_series_in_memory = get(kwargs, :time_series_in_memory, false)
     time_series_directory = get(kwargs, :time_series_directory, nothing)
+    compression = get(kwargs, :compression, nothing)
+    if compression === nothing
+        enabled = get(kwargs, :enable_compression, false)
+        compression = IS.CompressionSettings(enabled = enabled)
+    end
     validation_descriptor_file =
         get(kwargs, :config_path, POWER_SYSTEM_STRUCT_DESCRIPTOR_FILE)
 
@@ -1642,6 +1728,7 @@ function _create_system_data_from_kwargs(; kwargs...)
         validation_descriptor_file = validation_descriptor_file,
         time_series_in_memory = time_series_in_memory,
         time_series_directory = time_series_directory,
+        compression = compression,
     )
 end
 
