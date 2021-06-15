@@ -235,6 +235,15 @@ end
     end
 end
 
+@testset "Test set_name! of system component" begin
+    sys = System(100.0)
+    bus = Bus(nothing)
+    bus.bustype = BusTypes.REF
+    add_component!(sys, bus)
+    set_name!(sys, bus, "new_name")
+    @test get_component(Bus, sys, "new_name") === bus
+end
+
 @testset "Test forecast parameters" begin
     sys = System(100.0)
     bus = Bus(nothing)
@@ -275,9 +284,7 @@ end
 @testset "Test deepcopy with runchecks" begin
     sys = System(100.0)
     @test get_runchecks(sys)
-    @test_logs (:error, r"Model doesn't contain a slack bus") match_mode = :any @test get_runchecks(
-        deepcopy(sys),
-    )
+    @test get_runchecks(deepcopy(sys))
 end
 
 @testset "Test deepcopy with runchecks disabled" begin
@@ -286,6 +293,31 @@ end
     sys2 = deepcopy(sys)
     @test sys2 isa System
     @test !get_runchecks(sys)
+end
+
+@testset "Test deepcopy with time series options" begin
+    sys = PSB.build_system(
+        PSITestSystems,
+        "test_RTS_GMLC_sys";
+        time_series_in_memory = true,
+        force_build = true,
+    )
+    @test sys.data.time_series_storage isa IS.InMemoryTimeSeriesStorage
+    sys2 = deepcopy(sys)
+    @test sys2.data.time_series_storage isa IS.InMemoryTimeSeriesStorage
+    @test IS.compare_values(sys, sys2)
+
+    sys = PSB.build_system(
+        PSITestSystems,
+        "test_RTS_GMLC_sys";
+        time_series_in_memory = false,
+        force_build = true,
+    )
+    @test sys.data.time_series_storage isa IS.Hdf5TimeSeriesStorage
+    sys2 = deepcopy(sys)
+    @test sys2.data.time_series_storage isa IS.Hdf5TimeSeriesStorage
+    @test sys.data.time_series_storage.file_path != sys2.data.time_series_storage.file_path
+    @test IS.compare_values(sys, sys2)
 end
 
 @testset "Test with compression enabled" begin

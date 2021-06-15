@@ -66,68 +66,68 @@
       "supertype": "OperationalCost"
     },
     {
-        "struct_name": "StorageManagementCost",
-        "docstring": "Data Structure for Operational Cost Data like variable cost and start - stop costs and energy storage cost.",
-        "fields": [
-          {
-            "name": "variable",
-            "comment": "variable cost",
-            "null_value": "VariableCost((0.0, 0.0))",
-            "data_type": "VariableCost"
+      "struct_name": "StorageManagementCost",
+      "docstring": "Data Structure for Operational Cost Data like variable cost and start - stop costs and energy storage cost.",
+      "fields": [
+        {
+          "name": "variable",
+          "comment": "variable cost",
+          "null_value": "VariableCost((0.0, 0.0))",
+          "data_type": "VariableCost"
+        },
+        {
+          "name": "fixed",
+          "comment": "fixed cost",
+          "null_value": "0.0",
+          "data_type": "Float64"
+        },
+        {
+          "name": "start_up",
+          "comment": "start-up cost",
+          "null_value": "0.0",
+          "data_type": "Float64",
+          "valid_range": {
+            "min": 0,
+            "max": null
           },
-          {
-            "name": "fixed",
-            "comment": "fixed cost",
-            "null_value": "0.0",
-            "data_type": "Float64"
+          "validation_action": "warn"
+        },
+        {
+          "name": "shut_down",
+          "comment": "shut-down cost",
+          "null_value": "0.0",
+          "data_type": "Float64",
+          "valid_range": {
+            "min": 0,
+            "max": null
           },
-          {
-            "name": "start_up",
-            "comment": "start-up cost",
-            "null_value": "0.0",
-            "data_type": "Float64",
-            "valid_range": {
-              "min": 0,
-              "max": null
-            },
-            "validation_action": "warn"
+          "validation_action": "warn"
+        },
+        {
+          "name": "energy_shortage_cost",
+          "comment": "Cost incurred by the model for being short of the energy target.",
+          "null_value": "0.0",
+          "data_type": "Float64",
+          "valid_range": {
+            "min": 0,
+            "max": null
           },
-          {
-            "name": "shut_down",
-            "comment": "shut-down cost",
-            "null_value": "0.0",
-            "data_type": "Float64",
-            "valid_range": {
-              "min": 0,
-              "max": null
-            },
-            "validation_action": "warn"
+          "validation_action": "warn"
+        },
+        {
+          "name": "energy_surplus_cost",
+          "comment": "Cost incurred by the model for surplus energy stored.",
+          "null_value": "0.0",
+          "data_type": "Float64",
+          "valid_range": {
+            "min": 0,
+            "max": null
           },
-          {
-            "name": "energy_shortage_cost",
-            "comment": "Cost incurred by the model for being short of the energy target.",
-            "null_value": "0.0",
-            "data_type": "Float64",
-            "valid_range": {
-              "min": 0,
-              "max": null
-            },
-            "validation_action": "warn"
-          },
-          {
-            "name": "energy_surplus_cost",
-            "comment": "Cost incurred by the model for surplus energy stored.",
-            "null_value": "0.0",
-            "data_type": "Float64",
-            "valid_range": {
-              "min": 0,
-              "max": null
-            },
-            "validation_action": "warn"
-          }
-        ],
-        "supertype": "OperationalCost"
-      },
+          "validation_action": "warn"
+        }
+      ],
+      "supertype": "OperationalCost"
+    },
     {
       "struct_name": "MarketBidCost",
       "docstring": "Data Structure Operational Cost to reflect market bids of energy and ancilliary services.\nCompatible with most US Market bidding mechanisms",
@@ -221,7 +221,6 @@
         {
           "null_value": "init",
           "name": "name",
-          "accessor_module": "InfrastructureSystems",
           "data_type": "String"
         },
         {
@@ -244,7 +243,6 @@
         },
         {
           "name": "time_series_container",
-          "accessor_module": "InfrastructureSystems",
           "comment": "internal time_series storage",
           "null_value": "InfrastructureSystems.TimeSeriesContainer()",
           "data_type": "InfrastructureSystems.TimeSeriesContainer",
@@ -267,7 +265,6 @@
         {
           "null_value": "init",
           "name": "name",
-          "accessor_module": "InfrastructureSystems",
           "data_type": "String"
         },
         {
@@ -282,7 +279,6 @@
         },
         {
           "name": "time_series_container",
-          "accessor_module": "InfrastructureSystems",
           "comment": "internal time_series storage",
           "null_value": "InfrastructureSystems.TimeSeriesContainer()",
           "data_type": "InfrastructureSystems.TimeSeriesContainer",
@@ -312,7 +308,6 @@
         {
           "null_value": "init",
           "name": "name",
-          "accessor_module": "InfrastructureSystems",
           "comment": "the name of the bus",
           "data_type": "String"
         },
@@ -412,7 +407,7 @@
           "exclude_setter": true
         }
       ],
-      "custom_code": "IS.get_name(arc::Arc) = (get_name ∘ get_from)(arc) * \" -> \" * (get_name ∘ get_to)(arc)",
+      "custom_code": "get_name(arc::Arc) = (get_name ∘ get_from)(arc) * \" -> \" * (get_name ∘ get_to)(arc)",
       "supertype": "Topology"
     },
     {
@@ -421,7 +416,6 @@
         {
           "null_value": "init",
           "name": "name",
-          "accessor_module": "InfrastructureSystems",
           "data_type": "String"
         },
         {
@@ -510,7 +504,6 @@
         },
         {
           "name": "time_series_container",
-          "accessor_module": "InfrastructureSystems",
           "comment": "internal time_series storage",
           "null_value": "InfrastructureSystems.TimeSeriesContainer()",
           "data_type": "InfrastructureSystems.TimeSeriesContainer",
@@ -532,7 +525,6 @@
         {
           "null_value": "init",
           "name": "name",
-          "accessor_module": "InfrastructureSystems",
           "data_type": "String"
         },
         {
@@ -629,7 +621,6 @@
         },
         {
           "name": "time_series_container",
-          "accessor_module": "InfrastructureSystems",
           "comment": "internal time_series storage",
           "null_value": "InfrastructureSystems.TimeSeriesContainer()",
           "data_type": "InfrastructureSystems.TimeSeriesContainer",
@@ -651,7 +642,6 @@
         {
           "null_value": "init",
           "name": "name",
-          "accessor_module": "InfrastructureSystems",
           "data_type": "String"
         },
         {
@@ -755,7 +745,6 @@
         },
         {
           "name": "time_series_container",
-          "accessor_module": "InfrastructureSystems",
           "comment": "internal time_series storage",
           "null_value": "InfrastructureSystems.TimeSeriesContainer()",
           "data_type": "InfrastructureSystems.TimeSeriesContainer",
@@ -777,7 +766,6 @@
         {
           "null_value": "init",
           "name": "name",
-          "accessor_module": "InfrastructureSystems",
           "data_type": "String"
         },
         {
@@ -871,7 +859,6 @@
         },
         {
           "name": "time_series_container",
-          "accessor_module": "InfrastructureSystems",
           "comment": "internal time_series storage",
           "null_value": "InfrastructureSystems.TimeSeriesContainer()",
           "data_type": "InfrastructureSystems.TimeSeriesContainer",
@@ -894,7 +881,6 @@
         {
           "null_value": "init",
           "name": "name",
-          "accessor_module": "InfrastructureSystems",
           "data_type": "String"
         },
         {
@@ -978,7 +964,6 @@
         },
         {
           "name": "time_series_container",
-          "accessor_module": "InfrastructureSystems",
           "comment": "internal time_series storage",
           "null_value": "InfrastructureSystems.TimeSeriesContainer()",
           "data_type": "InfrastructureSystems.TimeSeriesContainer",
@@ -1001,7 +986,6 @@
         {
           "null_value": "init",
           "name": "name",
-          "accessor_module": "InfrastructureSystems",
           "data_type": "String"
         },
         {
@@ -1064,7 +1048,6 @@
         },
         {
           "name": "time_series_container",
-          "accessor_module": "InfrastructureSystems",
           "comment": "internal time_series storage",
           "null_value": "InfrastructureSystems.TimeSeriesContainer()",
           "data_type": "InfrastructureSystems.TimeSeriesContainer",
@@ -1087,7 +1070,6 @@
         {
           "null_value": "init",
           "name": "name",
-          "accessor_module": "InfrastructureSystems",
           "data_type": "String"
         },
         {
@@ -1151,7 +1133,6 @@
         },
         {
           "name": "time_series_container",
-          "accessor_module": "InfrastructureSystems",
           "comment": "internal time_series storage",
           "null_value": "InfrastructureSystems.TimeSeriesContainer()",
           "data_type": "InfrastructureSystems.TimeSeriesContainer",
@@ -1173,7 +1154,6 @@
         {
           "null_value": "init",
           "name": "name",
-          "accessor_module": "InfrastructureSystems",
           "data_type": "String"
         },
         {
@@ -1255,7 +1235,6 @@
         },
         {
           "name": "time_series_container",
-          "accessor_module": "InfrastructureSystems",
           "comment": "internal time_series storage",
           "null_value": "InfrastructureSystems.TimeSeriesContainer()",
           "data_type": "InfrastructureSystems.TimeSeriesContainer",
@@ -1277,7 +1256,6 @@
         {
           "null_value": "init",
           "name": "name",
-          "accessor_module": "InfrastructureSystems",
           "data_type": "String"
         },
         {
@@ -1311,7 +1289,6 @@
         },
         {
           "name": "time_series_container",
-          "accessor_module": "InfrastructureSystems",
           "comment": "internal time_series storage",
           "null_value": "InfrastructureSystems.TimeSeriesContainer()",
           "data_type": "InfrastructureSystems.TimeSeriesContainer",
@@ -1334,7 +1311,6 @@
         {
           "null_value": "init",
           "name": "name",
-          "accessor_module": "InfrastructureSystems",
           "data_type": "String"
         },
         {
@@ -1410,7 +1386,6 @@
         },
         {
           "name": "time_series_container",
-          "accessor_module": "InfrastructureSystems",
           "comment": "internal time_series storage",
           "null_value": "InfrastructureSystems.TimeSeriesContainer()",
           "data_type": "InfrastructureSystems.TimeSeriesContainer",
@@ -1432,7 +1407,6 @@
         {
           "null_value": "init",
           "name": "name",
-          "accessor_module": "InfrastructureSystems",
           "data_type": "String"
         },
         {
@@ -1610,7 +1584,6 @@
         },
         {
           "name": "time_series_container",
-          "accessor_module": "InfrastructureSystems",
           "comment": "internal time_series storage",
           "null_value": "InfrastructureSystems.TimeSeriesContainer()",
           "data_type": "InfrastructureSystems.TimeSeriesContainer",
@@ -1632,7 +1605,6 @@
         {
           "null_value": "init",
           "name": "name",
-          "accessor_module": "InfrastructureSystems",
           "data_type": "String"
         },
         {
@@ -1759,7 +1731,6 @@
         },
         {
           "name": "time_series_container",
-          "accessor_module": "InfrastructureSystems",
           "comment": "internal time_series storage",
           "null_value": "InfrastructureSystems.TimeSeriesContainer()",
           "data_type": "InfrastructureSystems.TimeSeriesContainer",
@@ -1781,7 +1752,6 @@
         {
           "null_value": "init",
           "name": "name",
-          "accessor_module": "InfrastructureSystems",
           "data_type": "String"
         },
         {
@@ -2033,7 +2003,6 @@
         },
         {
           "name": "time_series_container",
-          "accessor_module": "InfrastructureSystems",
           "comment": "internal time_series storage",
           "null_value": "InfrastructureSystems.TimeSeriesContainer()",
           "data_type": "InfrastructureSystems.TimeSeriesContainer",
@@ -2055,7 +2024,6 @@
         {
           "null_value": "init",
           "name": "name",
-          "accessor_module": "InfrastructureSystems",
           "data_type": "String"
         },
         {
@@ -2154,7 +2122,6 @@
         },
         {
           "name": "time_series_container",
-          "accessor_module": "InfrastructureSystems",
           "comment": "internal time_series storage",
           "null_value": "InfrastructureSystems.TimeSeriesContainer()",
           "data_type": "InfrastructureSystems.TimeSeriesContainer",
@@ -2177,7 +2144,6 @@
         {
           "null_value": "init",
           "name": "name",
-          "accessor_module": "InfrastructureSystems",
           "data_type": "String"
         },
         {
@@ -2264,7 +2230,6 @@
         },
         {
           "name": "time_series_container",
-          "accessor_module": "InfrastructureSystems",
           "comment": "internal time_series storage",
           "null_value": "InfrastructureSystems.TimeSeriesContainer()",
           "data_type": "InfrastructureSystems.TimeSeriesContainer",
@@ -2287,7 +2252,6 @@
         {
           "null_value": "init",
           "name": "name",
-          "accessor_module": "InfrastructureSystems",
           "data_type": "String"
         },
         {
@@ -2433,7 +2397,6 @@
         },
         {
           "name": "time_series_container",
-          "accessor_module": "InfrastructureSystems",
           "comment": "internal time_series storage",
           "null_value": "InfrastructureSystems.TimeSeriesContainer()",
           "data_type": "InfrastructureSystems.TimeSeriesContainer",
@@ -2456,7 +2419,6 @@
         {
           "null_value": "init",
           "name": "name",
-          "accessor_module": "InfrastructureSystems",
           "data_type": "String"
         },
         {
@@ -2546,7 +2508,8 @@
             "min": 0,
             "max": null
           },
-          "validation_action": "error"
+          "validation_action": "error",
+          "needs_conversion": true
         },
         {
           "name": "time_limits",
@@ -2627,7 +2590,6 @@
         },
         {
           "name": "time_series_container",
-          "accessor_module": "InfrastructureSystems",
           "comment": "internal time_series storage",
           "null_value": "InfrastructureSystems.TimeSeriesContainer()",
           "data_type": "InfrastructureSystems.TimeSeriesContainer",
@@ -2650,7 +2612,6 @@
         {
           "null_value": "init",
           "name": "name",
-          "accessor_module": "InfrastructureSystems",
           "data_type": "String"
         },
         {
@@ -2791,7 +2752,6 @@
         },
         {
           "name": "time_series_container",
-          "accessor_module": "InfrastructureSystems",
           "comment": "internal time_series storage",
           "null_value": "InfrastructureSystems.TimeSeriesContainer()",
           "data_type": "InfrastructureSystems.TimeSeriesContainer",
@@ -2808,176 +2768,174 @@
       "supertype": "Storage"
     },
     {
-        "struct_name": "BatteryEMS",
-        "docstring": "Data structure for a battery compatible with energy management formulations.",
-        "fields": [
-          {
-            "null_value": "init",
-            "name": "name",
-            "accessor_module": "InfrastructureSystems",
-            "data_type": "String"
+      "struct_name": "BatteryEMS",
+      "docstring": "Data structure for a battery compatible with energy management formulations.",
+      "fields": [
+        {
+          "null_value": "init",
+          "name": "name",
+          "data_type": "String"
+        },
+        {
+          "null_value": "false",
+          "name": "available",
+          "data_type": "Bool"
+        },
+        {
+          "name": "bus",
+          "null_value": "Bus(nothing)",
+          "data_type": "Bus"
+        },
+        {
+          "name": "prime_mover",
+          "comment": "Prime mover technology according to EIA 923",
+          "null_value": "PrimeMovers.BA",
+          "data_type": "PrimeMovers"
+        },
+        {
+          "name": "initial_energy",
+          "null_value": "0.0",
+          "comment": "State of Charge of the Battery p.u.-hr",
+          "data_type": "Float64",
+          "valid_range": {
+            "min": 0,
+            "max": null
           },
-          {
-            "null_value": "false",
-            "name": "available",
-            "data_type": "Bool"
+          "validation_action": "error",
+          "needs_conversion": true
+        },
+        {
+          "name": "state_of_charge_limits",
+          "null_value": "(min=0.0, max=0.0)",
+          "comment": "Maximum and Minimum storage capacity in p.u.-hr",
+          "data_type": "NamedTuple{(:min, :max), Tuple{Float64, Float64}}",
+          "valid_range": {
+            "min": 0,
+            "max": null
           },
-          {
-            "name": "bus",
-            "null_value": "Bus(nothing)",
-            "data_type": "Bus"
+          "validation_action": "error",
+          "needs_conversion": true
+        },
+        {
+          "name": "rating",
+          "null_value": "0.0",
+          "data_type": "Float64",
+          "needs_conversion": true
+        },
+        {
+          "name": "active_power",
+          "null_value": "0.0",
+          "data_type": "Float64",
+          "needs_conversion": true
+        },
+        {
+          "name": "input_active_power_limits",
+          "null_value": "(min=0.0, max=0.0)",
+          "data_type": "NamedTuple{(:min, :max), Tuple{Float64, Float64}}",
+          "valid_range": {
+            "min": 0,
+            "max": null
           },
-          {
-            "name": "prime_mover",
-            "comment": "Prime mover technology according to EIA 923",
-            "null_value": "PrimeMovers.BA",
-            "data_type": "PrimeMovers"
+          "validation_action": "error",
+          "needs_conversion": true
+        },
+        {
+          "name": "output_active_power_limits",
+          "null_value": "(min=0.0, max=0.0)",
+          "data_type": "NamedTuple{(:min, :max), Tuple{Float64, Float64}}",
+          "valid_range": {
+            "min": 0,
+            "max": null
           },
-          {
-            "name": "initial_energy",
-            "null_value": "0.0",
-            "comment": "State of Charge of the Battery p.u.-hr",
-            "data_type": "Float64",
-            "valid_range": {
-              "min": 0,
-              "max": null
-            },
-            "validation_action": "error",
-            "needs_conversion": true
+          "validation_action": "error",
+          "needs_conversion": true
+        },
+        {
+          "name": "efficiency",
+          "null_value": "(in=0.0, out=0.0)",
+          "data_type": "NamedTuple{(:in, :out), Tuple{Float64, Float64}}",
+          "valid_range": {
+            "min": 0,
+            "max": 1
           },
-          {
-            "name": "state_of_charge_limits",
-            "null_value": "(min=0.0, max=0.0)",
-            "comment": "Maximum and Minimum storage capacity in p.u.-hr",
-            "data_type": "NamedTuple{(:min, :max), Tuple{Float64, Float64}}",
-            "valid_range": {
-              "min": 0,
-              "max": null
-            },
-            "validation_action": "error",
-            "needs_conversion": true
+          "validation_action": "warn"
+        },
+        {
+          "name": "reactive_power",
+          "null_value": "0.0",
+          "data_type": "Float64",
+          "valid_range": "reactive_power_limits",
+          "validation_action": "warn",
+          "needs_conversion": true
+        },
+        {
+          "name": "reactive_power_limits",
+          "null_value": "(min=0.0, max=0.0)",
+          "data_type": "Union{Nothing, Min_Max}",
+          "needs_conversion": true
+        },
+        {
+          "name": "base_power",
+          "comment": "Base power of the unit in MVA",
+          "null_value": "0.0",
+          "data_type": "Float64",
+          "valid_range": {
+            "min": 0,
+            "max": null
           },
-          {
-            "name": "rating",
-            "null_value": "0.0",
-            "data_type": "Float64",
-            "needs_conversion": true
-          },
-          {
-            "name": "active_power",
-            "null_value": "0.0",
-            "data_type": "Float64",
-            "needs_conversion": true
-          },
-          {
-            "name": "input_active_power_limits",
-            "null_value": "(min=0.0, max=0.0)",
-            "data_type": "NamedTuple{(:min, :max), Tuple{Float64, Float64}}",
-            "valid_range": {
-              "min": 0,
-              "max": null
-            },
-            "validation_action": "error",
-            "needs_conversion": true
-          },
-          {
-            "name": "output_active_power_limits",
-            "null_value": "(min=0.0, max=0.0)",
-            "data_type": "NamedTuple{(:min, :max), Tuple{Float64, Float64}}",
-            "valid_range": {
-              "min": 0,
-              "max": null
-            },
-            "validation_action": "error",
-            "needs_conversion": true
-          },
-          {
-            "name": "efficiency",
-            "null_value": "(in=0.0, out=0.0)",
-            "data_type": "NamedTuple{(:in, :out), Tuple{Float64, Float64}}",
-            "valid_range": {
-              "min": 0,
-              "max": 1
-            },
-            "validation_action": "warn"
-          },
-          {
-            "name": "reactive_power",
-            "null_value": "0.0",
-            "data_type": "Float64",
-            "valid_range": "reactive_power_limits",
-            "validation_action": "warn",
-            "needs_conversion": true
-          },
-          {
-            "name": "reactive_power_limits",
-            "null_value": "(min=0.0, max=0.0)",
-            "data_type": "Union{Nothing, Min_Max}",
-            "needs_conversion": true
-          },
-          {
-            "name": "base_power",
-            "comment": "Base power of the unit in MVA",
-            "null_value": "0.0",
-            "data_type": "Float64",
-            "valid_range": {
-              "min": 0,
-              "max": null
-            },
-            "validation_action": "warn"
-          },
-          {
-            "name": "operation_cost",
-            "null_value": "nothing",
-            "default": "nothing",
-            "data_type": "Union{Nothing, OperationalCost}"
-          },
-          {
-              "name": "storage_target",
-              "comment": "Storage target at the end of simulation as ratio of storage capacity.",
-              "null_value": "0.0",
-              "data_type": "Float64",
-              "default": "0.0"
-          },
-          {
-            "name": "services",
-            "data_type": "Vector{Service}",
-            "comment": "Services that this device contributes to",
-            "null_value": "Device[]",
-            "default": "Device[]"
-          },
-          {
-            "name": "dynamic_injector",
-            "data_type": "Union{Nothing, DynamicInjection}",
-            "comment": "corresponding dynamic injection device",
-            "null_value": "nothing",
-            "exclude_setter": true,
-            "default": "nothing"
-          },
-          {
-            "name": "ext",
-            "data_type": "Dict{String, Any}",
-            "null_value": "Dict{String, Any}()",
-            "default": "Dict{String, Any}()"
-          },
-          {
-            "name": "time_series_container",
-            "accessor_module": "InfrastructureSystems",
-            "comment": "internal time_series storage",
-            "null_value": "InfrastructureSystems.TimeSeriesContainer()",
-            "data_type": "InfrastructureSystems.TimeSeriesContainer",
-            "default": "InfrastructureSystems.TimeSeriesContainer()"
-          },
-          {
-            "name": "internal",
-            "comment": "power system internal reference, do not modify",
-            "data_type": "InfrastructureSystemsInternal",
-            "internal_default": "InfrastructureSystemsInternal()",
-            "exclude_setter": true
-          }
-        ],
-        "supertype": "Storage"
-      },
+          "validation_action": "warn"
+        },
+        {
+          "name": "operation_cost",
+          "null_value": "nothing",
+          "default": "nothing",
+          "data_type": "Union{Nothing, OperationalCost}"
+        },
+        {
+          "name": "storage_target",
+          "comment": "Storage target at the end of simulation as ratio of storage capacity.",
+          "null_value": "0.0",
+          "data_type": "Float64",
+          "default": "0.0"
+        },
+        {
+          "name": "services",
+          "data_type": "Vector{Service}",
+          "comment": "Services that this device contributes to",
+          "null_value": "Device[]",
+          "default": "Device[]"
+        },
+        {
+          "name": "dynamic_injector",
+          "data_type": "Union{Nothing, DynamicInjection}",
+          "comment": "corresponding dynamic injection device",
+          "null_value": "nothing",
+          "exclude_setter": true,
+          "default": "nothing"
+        },
+        {
+          "name": "ext",
+          "data_type": "Dict{String, Any}",
+          "null_value": "Dict{String, Any}()",
+          "default": "Dict{String, Any}()"
+        },
+        {
+          "name": "time_series_container",
+          "comment": "internal time_series storage",
+          "null_value": "InfrastructureSystems.TimeSeriesContainer()",
+          "data_type": "InfrastructureSystems.TimeSeriesContainer",
+          "default": "InfrastructureSystems.TimeSeriesContainer()"
+        },
+        {
+          "name": "internal",
+          "comment": "power system internal reference, do not modify",
+          "data_type": "InfrastructureSystemsInternal",
+          "internal_default": "InfrastructureSystemsInternal()",
+          "exclude_setter": true
+        }
+      ],
+      "supertype": "Storage"
+    },
     {
       "struct_name": "StaticReserve",
       "docstring": "Data Structure for a proportional reserve product for system simulations.",
@@ -2986,7 +2944,6 @@
         {
           "null_value": "init",
           "name": "name",
-          "accessor_module": "InfrastructureSystems",
           "data_type": "String"
         },
         {
@@ -3039,7 +2996,6 @@
         {
           "null_value": "init",
           "name": "name",
-          "accessor_module": "InfrastructureSystems",
           "data_type": "String"
         },
         {
@@ -3093,7 +3049,6 @@
         {
           "null_value": "init",
           "name": "name",
-          "accessor_module": "InfrastructureSystems",
           "data_type": "String"
         },
         {
@@ -3142,15 +3097,14 @@
       "parametric": "ReserveDirection",
       "fields": [
         {
-            "name": "variable",
-            "comment": "Variable Cost TimeSeriesKey",
-            "null_value": "nothing",
-            "data_type": "Union{Nothing, IS.TimeSeriesKey}"
+          "name": "variable",
+          "comment": "Variable Cost TimeSeriesKey",
+          "null_value": "nothing",
+          "data_type": "Union{Nothing, IS.TimeSeriesKey}"
         },
         {
           "null_value": "init",
           "name": "name",
-          "accessor_module": "InfrastructureSystems",
           "data_type": "String"
         },
         {
@@ -3177,7 +3131,6 @@
         },
         {
           "name": "time_series_container",
-          "accessor_module": "InfrastructureSystems",
           "comment": "internal time_series storage",
           "null_value": "InfrastructureSystems.TimeSeriesContainer()",
           "data_type": "InfrastructureSystems.TimeSeriesContainer",
@@ -3201,7 +3154,6 @@
         {
           "null_value": "init",
           "name": "name",
-          "accessor_module": "InfrastructureSystems",
           "data_type": "String"
         },
         {
@@ -3234,7 +3186,6 @@
         },
         {
           "name": "time_series_container",
-          "accessor_module": "InfrastructureSystems",
           "comment": "internal time_series storage",
           "null_value": "InfrastructureSystems.TimeSeriesContainer()",
           "data_type": "InfrastructureSystems.TimeSeriesContainer",
@@ -3257,7 +3208,6 @@
         {
           "null_value": "init",
           "name": "name",
-          "accessor_module": "InfrastructureSystems",
           "data_type": "String"
         },
         {
@@ -3290,7 +3240,6 @@
         },
         {
           "name": "time_series_container",
-          "accessor_module": "InfrastructureSystems",
           "comment": "internal time_series storage",
           "null_value": "InfrastructureSystems.TimeSeriesContainer()",
           "data_type": "InfrastructureSystems.TimeSeriesContainer",
@@ -3312,7 +3261,6 @@
         {
           "null_value": "init",
           "name": "name",
-          "accessor_module": "InfrastructureSystems",
           "data_type": "String"
         },
         {
@@ -3385,7 +3333,6 @@
         {
           "null_value": "init",
           "name": "name",
-          "accessor_module": "InfrastructureSystems",
           "data_type": "String"
         },
         {
@@ -3406,7 +3353,6 @@
         },
         {
           "name": "time_series_container",
-          "accessor_module": "InfrastructureSystems",
           "comment": "internal time_series storage",
           "null_value": "InfrastructureSystems.TimeSeriesContainer()",
           "data_type": "InfrastructureSystems.TimeSeriesContainer",
@@ -10146,6 +10092,63 @@
       "supertype": "FrequencyEstimator"
     },
     {
+      "struct_name": "ReducedOrderPLL",
+      "docstring": "Parameters of a Phase-Locked Loop (PLL) based on Purba, Dhople, Jafarpour, Bullo and Johnson.\n\"Reduced-order Structure-preserving Model for Parallel-connected Three-phase Grid-tied Inverters.\"\n2017 IEEE 18th Workshop on Control and Modeling for Power Electronics (COMPEL): 1-7.",
+      "fields": [
+        {
+          "name": "ω_lp",
+          "comment": "PLL low-pass filter frequency (rad/sec)",
+          "null_value": 0,
+          "data_type": "Float64",
+          "valid_range": {
+            "min": 0,
+            "max": null
+          }
+        },
+        {
+          "name": "kp_pll",
+          "comment": "PLL proportional gain",
+          "null_value": 0,
+          "data_type": "Float64",
+          "valid_range": {
+            "min": 0,
+            "max": null
+          }
+        },
+        {
+          "name": "ki_pll",
+          "comment": "PLL integral gain",
+          "null_value": 0,
+          "data_type": "Float64",
+          "valid_range": {
+            "min": 0,
+            "max": null
+          }
+        },
+        {
+          "name": "ext",
+          "data_type": "Dict{String, Any}",
+          "null_value": "Dict{String, Any}()",
+          "default": "Dict{String, Any}()"
+        },
+        {
+          "name": "states",
+          "exclude_setter": true,
+          "comment": "The states of the ReducedOrderPLL model are:\n\tvq_pll: q-axis of the measured voltage in the PLL synchronous reference frame (SRF),\n\tε_pll: Integrator state of the PI controller,\n\tθ_pll: Phase angle displacement in the PLL SRF",
+          "internal_default": "[:vq_pll, :ε_pll, :θ_pll]",
+          "data_type": "Vector{Symbol}"
+        },
+        {
+          "name": "n_states",
+          "exclude_setter": true,
+          "comment": "ReducedOrderPLL has 3 states",
+          "internal_default": 3,
+          "data_type": "Int"
+        }
+      ],
+      "supertype": "FrequencyEstimator"
+    },
+    {
       "struct_name": "FixedFrequency",
       "docstring": "Parameters of a Fixed Frequency Estimator (i.e. no PLL).",
       "fields": [
@@ -10306,6 +10309,74 @@
       "supertype": "ActivePowerControl"
     },
     {
+      "struct_name": "ActivePowerPI",
+      "docstring": "Parameters of a Proportional-Integral Active Power controller for a specified power reference",
+      "fields": [
+        {
+          "name": "Kp_p",
+          "comment": "Proportional Gain",
+          "null_value": 0,
+          "data_type": "Float64",
+          "valid_range": {
+            "min": 0,
+            "max": null
+          }
+        },
+        {
+          "name": "Ki_p",
+          "comment": "Integral Gain",
+          "null_value": 0,
+          "data_type": "Float64",
+          "valid_range": {
+            "min": 0,
+            "max": null
+          }
+        },
+        {
+          "name": "ωz",
+          "comment": "filter frequency cutoff",
+          "null_value": 0,
+          "data_type": "Float64",
+          "valid_range": {
+            "min": 0,
+            "max": null
+          }
+        },
+        {
+          "name": "P_ref",
+          "comment": "Reference Power Set-point",
+          "null_value": 0,
+          "default": "1.0",
+          "data_type": "Float64",
+          "valid_range": {
+            "min": 0,
+            "max": null
+          }
+        },
+        {
+          "name": "ext",
+          "data_type": "Dict{String, Any}",
+          "null_value": "Dict{String, Any}()",
+          "default": "Dict{String, Any}()"
+        },
+        {
+          "name": "states",
+          "exclude_setter": true,
+          "comment": "The states of the ActivePowerPI model are:\n\tσp_oc: Integrator state of the PI Controller,\n\tp_oc: Measured active power of the inverter model",
+          "internal_default": "[:σp_oc, :p_oc]",
+          "data_type": "Vector{Symbol}"
+        },
+        {
+          "name": "n_states",
+          "exclude_setter": true,
+          "comment": "ActivePowerPI has two states",
+          "internal_default": 2,
+          "data_type": "Int"
+        }
+      ],
+      "supertype": "ActivePowerControl"
+    },
+    {
       "struct_name": "ReactivePowerDroop",
       "docstring": "Parameters of a Reactive Power droop controller",
       "fields": [
@@ -10364,7 +10435,86 @@
       "supertype": "ReactivePowerControl"
     },
     {
-      "struct_name": "CurrentControl",
+      "struct_name": "ReactivePowerPI",
+      "docstring": "Parameters of a Proportional-Integral Reactive Power controller for a specified power reference",
+      "fields": [
+        {
+          "name": "Kp_q",
+          "comment": "Proportional Gain",
+          "null_value": 0,
+          "data_type": "Float64",
+          "valid_range": {
+            "min": 0,
+            "max": null
+          }
+        },
+        {
+          "name": "Ki_q",
+          "comment": "Integral Gain",
+          "null_value": 0,
+          "data_type": "Float64",
+          "valid_range": {
+            "min": 0,
+            "max": null
+          }
+        },
+        {
+          "name": "ωf",
+          "comment": "filter frequency cutoff",
+          "null_value": 0,
+          "data_type": "Float64",
+          "valid_range": {
+            "min": 0,
+            "max": null
+          }
+        },
+        {
+          "name": "V_ref",
+          "comment": "Voltage Set-point",
+          "null_value": 0,
+          "default": "1.0",
+          "data_type": "Float64",
+          "valid_range": {
+            "min": 0,
+            "max": null
+          }
+        },
+        {
+          "name": "Q_ref",
+          "comment": "Reactive Power Set-point",
+          "null_value": 0,
+          "default": "1.0",
+          "data_type": "Float64",
+          "valid_range": {
+            "min": 0,
+            "max": null
+          }
+        },
+        {
+          "name": "ext",
+          "data_type": "Dict{String, Any}",
+          "null_value": "Dict{String, Any}()",
+          "default": "Dict{String, Any}()"
+        },
+        {
+          "name": "states",
+          "exclude_setter": true,
+          "comment": "The states of the ReactivePowerPI model are:\n\tσq_oc: Integrator state of the PI Controller,\n\tq_oc: Measured reactive power of the inverter model",
+          "internal_default": "[:σq_oc, :q_oc]",
+          "data_type": "Vector{Symbol}"
+        },
+        {
+          "name": "n_states",
+          "exclude_setter": true,
+          "comment": "ReactivePowerPI has two states",
+          "internal_default": 2,
+          "data_type": "Int"
+        }
+      ],
+      "supertype": "ReactivePowerControl"
+    },
+    {
+      "struct_name": "VoltageModeControl",
       "docstring": "Parameters of an inner loop current control PID using virtual impedance based on D'Arco, Suul and Fosso.\n\"A Virtual Synchronous Machine implementation for distributed control of power converters in SmartGrids.\"\nElectric Power Systems Research 122 (2015) 180–197.",
       "fields": [
         {
@@ -10476,15 +10626,72 @@
         {
           "name": "states",
           "exclude_setter": true,
-          "comment": "The states of the VirtualInertia model are:\n\tξd_ic: d-axis integrator state of the PI voltage controller,\n\tξq_ic: q-axis integrator state of the PI voltage controller,\n\tγd_ic: d-axis integrator state of the PI current controller,\n\tγq_ic: q-axis integrator state of the PI current controller,\n\tϕd_ic: d-axis low-pass filter of active damping,\n\tϕq_ic: q-axis low-pass filter of active damping",
+          "comment": "The states of the VoltageModeControl model are:\n\tξd_ic: d-axis integrator state of the PI voltage controller,\n\tξq_ic: q-axis integrator state of the PI voltage controller,\n\tγd_ic: d-axis integrator state of the PI current controller,\n\tγq_ic: q-axis integrator state of the PI current controller,\n\tϕd_ic: d-axis low-pass filter of active damping,\n\tϕq_ic: q-axis low-pass filter of active damping",
           "internal_default": "[:ξd_ic, :ξq_ic, :γd_ic, :γq_ic, :ϕd_ic, :ϕq_ic]",
           "data_type": "Vector{Symbol}"
         },
         {
           "name": "n_states",
           "exclude_setter": true,
-          "comment": "CurrentControl has 6 states",
+          "comment": "VoltageModeControl has 6 states",
           "internal_default": 6,
+          "data_type": "Int"
+        }
+      ],
+      "supertype": "InnerControl"
+    },
+    {
+      "struct_name": "CurrentModeControl",
+      "docstring": "Parameters of an inner loop PI current control using based on Purba, Dhople, Jafarpour, Bullo and Johnson.\n\"Reduced-order Structure-preserving Model for Parallel-connected Three-phase Grid-tied Inverters.\"\n2017 IEEE 18th Workshop on Control and Modeling for Power Electronics (COMPEL): 1-7.",
+      "fields": [
+        {
+          "name": "kpc",
+          "comment": "Current controller proportional gain",
+          "null_value": 0,
+          "data_type": "Float64",
+          "valid_range": {
+            "min": 0,
+            "max": null
+          }
+        },
+        {
+          "name": "kic",
+          "comment": "Current controller integral gain",
+          "null_value": 0,
+          "data_type": "Float64",
+          "valid_range": {
+            "min": 0,
+            "max": null
+          }
+        },
+        {
+          "name": "kffv",
+          "comment": "Gain to enable feed-forward gain of voltage.",
+          "null_value": 0,
+          "data_type": "Float64",
+          "valid_range": {
+            "min": 0,
+            "max": null
+          }
+        },
+        {
+          "name": "ext",
+          "data_type": "Dict{String, Any}",
+          "null_value": "Dict{String, Any}()",
+          "default": "Dict{String, Any}()"
+        },
+        {
+          "name": "states",
+          "exclude_setter": true,
+          "comment": "The states of the CurrentModeControl model are:\n\tγd_ic: d-axis integrator state of the PI current controller,\n\tγq_ic: q-axis integrator state of the PI current controller",
+          "internal_default": "[:γd_ic, :γq_ic]",
+          "data_type": "Vector{Symbol}"
+        },
+        {
+          "name": "n_states",
+          "exclude_setter": true,
+          "comment": "CurrentControl has 2 states",
+          "internal_default": 2,
           "data_type": "Int"
         }
       ],
@@ -10497,7 +10704,6 @@
         {
           "null_value": "init",
           "name": "name",
-          "accessor_module": "InfrastructureSystems",
           "data_type": "String"
         },
         {
